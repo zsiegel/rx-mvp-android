@@ -14,8 +14,11 @@ to be re-used across various views.
 
 - There are 3 activities that use the same presenter but in different ways
     - One activity uses a standard base activity to `start()` and `finish()` the presenter
-        - NOTE the presenter holds the subscriber and is `unsubscribes` in `finish()`
-    - Another activity uses the lifecycle callback pattern
+        - NOTE the presenter holds the subscriber and `unsubscribes` in `finish()`
+    - Another activity binds the observable to the activity lifecycle
         - NOTE the presenter passes back an observable bypassing the internal one
     - The last actibity uses a `fatter` custom view with a presenter attached
         - This is the pattern I tend to move towards for modularity
+        
+
+### If you have any questions or comments please open an issue
