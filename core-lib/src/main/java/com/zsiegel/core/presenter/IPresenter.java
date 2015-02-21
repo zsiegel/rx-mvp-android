@@ -3,6 +3,7 @@ package com.zsiegel.core.presenter;
 import com.zsiegel.core.view.IView;
 
 import rx.Observable;
+import rx.Subscriber;
 
 /**
  * A interface for our presenters
@@ -15,7 +16,8 @@ public interface IPresenter<T> {
     public void start();
     
     //This helps demonstrate how you could hook into the lifecycle
-    public Observable<T> startForLifecycle();
+    public Observable<T> getObservable();
+    public Subscriber<T> getSubscriber();
     
     public void finish();
     public void setView(IView<T> view);

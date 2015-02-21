@@ -12,6 +12,7 @@ import com.zsiegel.core.presenter.IPresenter;
 import com.zsiegel.core.presenter.UserPresenter;
 import com.zsiegel.core.service.UserService;
 import com.zsiegel.core.util.IScheduler;
+import com.zsiegel.core.view.IView;
 import com.zsiegel.sample.rxmvpandroid.R;
 import com.zsiegel.sample.rxmvpandroid.util.AppScheduler;
 
@@ -19,18 +20,15 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.android.app.RxActivity;
 import rx.android.lifecycle.LifecycleObservable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
+import rx.observers.Subscribers;
 
 /**
  * @author zsiegel
  */
-public class UsersLifecycleActivity extends RxActivity {
+public class UsersLifecycleActivity extends RxActivity implements IView<List<User>> {
 
     private static final String TAG = UsersLifecycleActivity.class.getSimpleName();
 
@@ -44,8 +42,8 @@ public class UsersLifecycleActivity extends RxActivity {
     @InjectView(R.id.loading)
     ProgressBar loadingView;
 
+    private Subscription subscription = Subscribers.empty();
     private ArrayAdapter<User> userAdapter;
-    private Subscription subscription = Subscriptions.empty();
     private IPresenter<List<User>> presenter;
 
     @Override
@@ -57,52 +55,48 @@ public class UsersLifecycleActivity extends RxActivity {
         scheduler = new AppScheduler();
         userService = new UserService();
 
-        //Create or inject your presenter
-        presenter = new UserPresenter(userService, scheduler);
-
-        //NOTE we do NOT set the IView here since we subscribe in onStart()
-
         //Inject views
         ButterKnife.inject(this);
 
         //Setup your adapter
         userAdapter = new ArrayAdapter<>(this, R.layout.list_item);
         listView.setAdapter(userAdapter);
+
+        //Create or inject your presenter
+        presenter = new UserPresenter(userService, scheduler);
+        presenter.setView(this);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        subscription = LifecycleObservable.bindActivityLifecycle(lifecycle(), presenter.startForLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<User>>() {
+    protected void onPause() {
+        super.onPause();
+        subscription = LifecycleObservable
+                .bindActivityLifecycle(lifecycle(), presenter.getObservable())
+                .subscribe(presenter.getSubscriber());
+    }
 
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        Log.i(TAG, "onStart");
-                        userAdapter.clear();
-                        loadingView.setVisibility(View.VISIBLE);
-                    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "");
+        Log.i(TAG, "onStop() Subscription is un-subscribed " + subscription.isUnsubscribed());
+    }
 
-                    @Override
-                    public void onCompleted() {
-                        Log.i(TAG, "onCompleted");
-                        loadingView.setVisibility(View.GONE);
-                    }
+    @Override
+    public void setLoading(boolean isLoading) {
+        Log.i(TAG, "setLoading()");
+        loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "Error", e);
-                    }
+    @Override
+    public void setModel(List<User> object) {
+        Log.i(TAG, "setModel()");
+        userAdapter.clear();
+        userAdapter.addAll(object);
+    }
 
-                    @Override
-                    public void onNext(List<User> users) {
-                        Log.i(TAG, "onNext");
-                        userAdapter.clear();
-                        userAdapter.addAll(users);
-                    }
-                });
+    @Override
+    public void error(Throwable t) {
+
     }
 }

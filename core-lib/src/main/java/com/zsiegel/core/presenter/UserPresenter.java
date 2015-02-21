@@ -1,9 +1,9 @@
 package com.zsiegel.core.presenter;
 
-import com.zsiegel.core.view.IView;
 import com.zsiegel.core.model.User;
 import com.zsiegel.core.service.UserService;
 import com.zsiegel.core.util.IScheduler;
+import com.zsiegel.core.view.IView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class UserPresenter implements IPresenter<List<User>> {
     public UserPresenter(UserService userService, IScheduler scheduler) {
         super();
         this.userService = userService;
-        
+
         //By using this scheduler we can run the same presenter in various ways
         //When run in Android land we run the work asynchronously and push results to the UI thread
         //When run in the tests we run the work and publish results on the same thread
@@ -41,42 +41,46 @@ public class UserPresenter implements IPresenter<List<User>> {
 
     @Override
     public void start() {
-        userService.getUsers()
-                .subscribeOn(scheduler.backgroundThread())
-                .observeOn(scheduler.mainThread())
-                .subscribe(new Subscriber<List<User>>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        view.setLoading(true);
-                        view.setModel(new ArrayList<User>());
-                    }
-
-                    @Override
-                    public void onCompleted() {
-                        view.setLoading(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        view.setLoading(false);
-                        view.error(e);
-                    }
-
-                    @Override
-                    public void onNext(List<User> users) {
-                        //NOTE We deviate slightly here from strict MVP
-                        //We have opted here not to provide formatted data to the view
-                        //We do this so that we can re-use presenters across multiple views
-                        //The views themselves format the data as they see fit
-                        view.setModel(users);
-                    }
-                });
+        getObservable().subscribe(getSubscriber());
     }
 
     @Override
-    public Observable<List<User>> startForLifecycle() {
-        return userService.getUsers();
+    public Subscriber<List<User>> getSubscriber() {
+        return new Subscriber<List<User>>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                view.setLoading(true);
+                view.setModel(new ArrayList<User>());
+            }
+
+            @Override
+            public void onCompleted() {
+                view.setLoading(false);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                view.setLoading(false);
+                view.error(e);
+            }
+
+            @Override
+            public void onNext(List<User> users) {
+                //NOTE We deviate slightly here from strict MVP
+                //We have opted here not to provide formatted data to the view
+                //We do this so that we can re-use presenters across multiple views
+                //The views themselves format the data as they see fit
+                view.setModel(users);
+            }
+        };
+    }
+
+    @Override
+    public Observable<List<User>> getObservable() {
+        return userService.getUsers()
+                .subscribeOn(scheduler.backgroundThread())
+                .observeOn(scheduler.mainThread());
     }
 
     @Override
