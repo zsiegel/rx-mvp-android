@@ -19,8 +19,8 @@ import com.zsiegel.sample.rxmvpandroid.util.AppScheduler;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * @author zsiegel
@@ -33,10 +33,10 @@ public class UserListView extends FrameLayout implements IView<List<User>> {
 
     private IPresenter<List<User>> usersPresenter;
 
-    @InjectView(R.id.list)
+    @Bind(R.id.list)
     ListView listView;
 
-    @InjectView(R.id.loading)
+    @Bind(R.id.loading)
     ProgressBar loadingView;
 
     private ArrayAdapter<User> userAdapter;
@@ -49,10 +49,10 @@ public class UserListView extends FrameLayout implements IView<List<User>> {
         super(context, attrs);
         init(context);
     }
-    
+
     private void init(Context context) {
         View v = inflate(context, R.layout.merge_list_layout, this);
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
 
         //Create or inject services
         scheduler = new AppScheduler();

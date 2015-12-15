@@ -44,8 +44,7 @@ public class UserPresenter implements IPresenter<List<User>> {
         subscription = getObservable().subscribe(getSubscriber());
     }
 
-    @Override
-    public Subscriber<List<User>> getSubscriber() {
+    private Subscriber<List<User>> getSubscriber() {
         return new Subscriber<List<User>>() {
             @Override
             public void onStart() {
@@ -76,8 +75,7 @@ public class UserPresenter implements IPresenter<List<User>> {
         };
     }
 
-    @Override
-    public Observable<List<User>> getObservable() {
+    private Observable<List<User>> getObservable() {
         return userService.getUsers()
                 .subscribeOn(scheduler.backgroundThread())
                 .observeOn(scheduler.mainThread());

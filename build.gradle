@@ -5,12 +5,32 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.1'
+        classpath 'com.android.tools.build:gradle:1.5.0'
     }
 }
 
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
     }
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            sourceCompatibility = "1.7"
+            targetCompatibility = "1.7"
+            options.encoding = "UTF-8"
+        }
+    }
+    // Workaround to prevent Gradle from stealing focus from other apps during tests run/etc.
+    // https://gist.github.com/artem-zinnatullin/4c250e04636e25797165
+    tasks.withType(JavaForkOptions) {
+        jvmArgs '-Djava.awt.headless=true'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

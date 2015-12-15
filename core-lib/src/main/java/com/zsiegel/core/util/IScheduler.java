@@ -8,7 +8,7 @@ import rx.Scheduler;
  */
 public interface IScheduler {
 
-    public Scheduler mainThread();
+    Scheduler mainThread();
 
-    public Scheduler backgroundThread();
+    Scheduler backgroundThread();
 }

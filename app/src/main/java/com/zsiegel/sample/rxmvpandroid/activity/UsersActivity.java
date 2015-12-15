@@ -16,8 +16,8 @@ import com.zsiegel.sample.rxmvpandroid.util.AppScheduler;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * @author zsiegel()
@@ -28,10 +28,10 @@ public class UsersActivity extends BaseActivity implements IView<List<User>> {
     private UserService userService;
     private IScheduler scheduler;
 
-    @InjectView(R.id.list)
+    @Bind(R.id.list)
     ListView listView;
 
-    @InjectView(R.id.loading)
+    @Bind(R.id.loading)
     ProgressBar loadingView;
 
     private ArrayAdapter<User> userAdapter;
@@ -40,18 +40,18 @@ public class UsersActivity extends BaseActivity implements IView<List<User>> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.merge_list_layout);
-        
+
         //Create or inject services
         scheduler = new AppScheduler();
         userService = new UserService();
-        
+
         //Create or inject your presenter
         presenter = new UserPresenter(userService, scheduler);
         presenter.setView(this);
-        
+
         //Inject views
-        ButterKnife.inject(this);
-        
+        ButterKnife.bind(this);
+
         //Setup your adapter
         userAdapter = new ArrayAdapter<>(this, R.layout.list_item);
         listView.setAdapter(userAdapter);

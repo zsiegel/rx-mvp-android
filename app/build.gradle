@@ -6,10 +6,11 @@ android {
 
     defaultConfig {
         applicationId "com.zsiegel.sample.rxmvpandroid"
-        minSdkVersion 14
-        targetSdkVersion 21
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.compileSdkVersion
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -39,5 +40,4 @@ dependencies {
     compile rootProject.ext.libraries.androidSupport
     compile rootProject.ext.libraries.appCompat
     compile rootProject.ext.libraries.rxandroid
-    compile rootProject.ext.libraries.rxandroidFramework
 }

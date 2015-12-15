@@ -5,9 +5,9 @@ package com.zsiegel.core.view;
  */
 public interface IView<T> {
 
-    public void setLoading(boolean isLoading);
+    void setLoading(boolean isLoading);
 
-    public void setModel(T object);
+    void setModel(T object);
 
-    public void error(Throwable t);
+    void error(Throwable t);
 }

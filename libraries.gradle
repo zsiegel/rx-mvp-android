@@ -1,29 +1,26 @@
 ext {
 
-    minSdkVersion = 14
-    compileSdkVersion = 21
-    buildToolsVersion = '21.1.2'
+    minSdkVersion = 16
+    compileSdkVersion = 23
+    buildToolsVersion = '23.0.1'
 
     //Android
-    butterknifeVersion = '6.1.0'
-    androidSupportVersion = '21.0.+'
-    rxandroidVersion = '0.24.0'
-    rxandroidframeworkVersion = '0.24.0'
-    appCompatVersion = '21.0.0'
+    butterknifeVersion = '7.0.1'
+    androidSupportVersion = '23.1.0'
+    rxandroidVersion = '1.0.1'
 
     //Java
-    rxjavaVersion = '1.0.4'
+    rxjavaVersion = '1.0.14'
 
     //Testing
-    junitVersion = '4.11'
-    dexmakerVersion = '1.1'
-    mockitoVersion = '1.9.5'
+    junitVersion = '4.12'
+    dexmakerVersion = '1.2'
+    mockitoVersion = '1.10.19'
 
     libraries = [
             butterknife       : "com.jakewharton:butterknife:${butterknifeVersion}",
-            appCompat         : "com.android.support:appcompat-v7:${appCompatVersion}",
+            appCompat: "com.android.support:appcompat-v7:${androidSupportVersion}",
             rxjava            : "io.reactivex:rxjava:${rxjavaVersion}",
-            rxandroidFramework: "io.reactivex:rxandroid-framework:${rxandroidVersion}",
             rxandroid         : "io.reactivex:rxandroid:${rxandroidVersion}",
             androidSupport    : "com.android.support:support-v13:${androidSupportVersion}",
     ]
