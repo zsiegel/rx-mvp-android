@@ -41,7 +41,7 @@ public class UserPresenter implements IPresenter<List<User>> {
 
     @Override
     public void start() {
-        getObservable().subscribe(getSubscriber());
+        subscription = getObservable().subscribe(getSubscriber());
     }
 
     @Override
