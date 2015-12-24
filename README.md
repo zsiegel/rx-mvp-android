@@ -17,7 +17,7 @@ to be re-used across various views.
         - NOTE the presenter holds the subscriber and `unsubscribes` in `finish()`
     - Another activity binds the observable to the activity lifecycle
         - NOTE the presenter passes back an observable bypassing the internal one
-    - The last actibity uses a `fatter` custom view with a presenter attached
+    - The last activity uses a `fatter` custom view with a presenter attached
         - This is the pattern I tend to move towards for modularity
         
 
