@@ -4,14 +4,12 @@ import com.zsiegel.core.model.User;
 import com.zsiegel.core.service.UserService;
 import com.zsiegel.core.util.IScheduler;
 import com.zsiegel.core.view.IView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
+
+import java.util.List;
 
 /**
  * @author zsiegel
@@ -50,7 +48,6 @@ public class UserPresenter implements IPresenter<List<User>> {
             public void onStart() {
                 super.onStart();
                 view.setLoading(true);
-                view.setModel(new ArrayList<User>());
             }
 
             @Override
@@ -84,5 +81,6 @@ public class UserPresenter implements IPresenter<List<User>> {
     @Override
     public void finish() {
         subscription.unsubscribe();
+        this.view = null;
     }
 }

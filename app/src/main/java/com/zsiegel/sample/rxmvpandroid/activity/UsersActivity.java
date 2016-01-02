@@ -1,11 +1,12 @@
 package com.zsiegel.sample.rxmvpandroid.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.zsiegel.core.model.User;
 import com.zsiegel.core.presenter.UserPresenter;
 import com.zsiegel.core.service.UserService;
@@ -16,13 +17,10 @@ import com.zsiegel.sample.rxmvpandroid.util.AppScheduler;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
  * @author zsiegel()
  */
-public class UsersActivity extends BaseActivity implements IView<List<User>> {
+public class UsersActivity extends Activity implements IView<List<User>> {
 
     //We would inject these via Dagger in a real app
     private UserService userService;
@@ -34,6 +32,7 @@ public class UsersActivity extends BaseActivity implements IView<List<User>> {
     @Bind(R.id.loading)
     ProgressBar loadingView;
 
+    private UserPresenter presenter;
     private ArrayAdapter<User> userAdapter;
 
     @Override
@@ -55,11 +54,13 @@ public class UsersActivity extends BaseActivity implements IView<List<User>> {
         //Setup your adapter
         userAdapter = new ArrayAdapter<>(this, R.layout.list_item);
         listView.setAdapter(userAdapter);
+
+        presenter.start();
     }
 
     @Override
     public void setLoading(boolean isLoading) {
-        loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        loadingView.setVisibility(isLoading ? android.view.View.VISIBLE : android.view.View.GONE);
     }
 
     @Override
@@ -71,5 +72,11 @@ public class UsersActivity extends BaseActivity implements IView<List<User>> {
     @Override
     public void error(Throwable t) {
         //Handle error here
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.finish();
     }
 }
